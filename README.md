@@ -44,13 +44,16 @@ Here are actual approaches, techniques, and algorithms that we ended up using fo
 #### Content-based Recommendation
 In addition to using the collaborative filter approach, we used the content-based approach in recommending movies based on the similarity of move attributes as the input for building a content-based recommender is movie attributes (metadata).  For example, if a user watches a comedy starring Adam Sandle, the system will recommend movies in the same genre, starring the same actor or both.
 ![alt text](./image/image7.png)
+
 As seen above, given the input movie attributes (metadata), we combine the ‘genres’ and ‘tag’ columns into the ‘bag_of_words’ column, which we use for vectorizing: CountVectorize() and TfidfVectorizer().  Then, we compute the consine_similarity matrix and similarity rankings before finally recommending movies.  
+
 In the following figure, we’d like to note that CountVectorizer(Ref. 1) converts the ‘bag_of_words’ into a matrix of token counts in ints, whereas TfidfVectorizer(Ref. 2) converts the ‘bag_of_words’ into a matrix of TF-IDF features in floats.  By comparison, the TF-IDF features matrix is larger than the token count matrix in terms of columns: 7090 columns vs. 1495 columns as seen below.
 ![alt text](./image/image6.png)
 
 #### Recommending Movies Based on the User’s Watch History
 In our research, we couldn't find an existing movie recommender that is based on a user's watch history. So, we decided to come up with our own movie recommender that accounts for the user's watch history as shown below. 
 ![alt text](./image/image5.png)
+
 For the most recent N timestamps, we use the content-based recommender in recommending movies for the particular movie that the user watched at that timestamp.  To be specific, the most recent timestamp (in red) carries the highest weight to the number of recommended movies, whereas the least recent timestamp (in green) carries the lowest weight to the number of recommended movies.
 
 For the user with userID of 107, our movie recommender suggests a list of movies based on the user’s watch history as seen on the right.  In the final list of recommended moves, we ensure that there are no duplicates in the list before presenting the final list to the user.   
@@ -70,8 +73,10 @@ In this section, we’re going to describe experimental results and analysis tha
 ### Content-based Recommendation
 Because TfidfVectorizer() has more columns, it requires more computing resources.  Hence, for our implementation of the content-based recommendation system, CountVectorizer() is a better choice.  After sorting the similarity rankings, both CountVectorizer() and TfidfVectorizer() recommend the same list of 10 movies for an input movie ‘Mission Impossible II (2000)’ as shown below.
 ![alt text](./image/image8.png)
+
 Because it’s difficult for us to evaluate our content-based recommender whether it recommends a good list of movies based on an input movie, we decided to compare our results to both Rotten Tomatoes and IMDb’s suggested movies to conduct a qualitative analysis.  Both Rotten Tomatoes and IMDb’s recommendation systems suggest two different lists of movies as seen below.  This tells us that at a minimum, they use different movie attributes from our movie attributes that are found in our “bag_of_words” column.
 ![alt text](./image/image2.png)
+
 In addition to differing movie attributes, both Rotten Tomatoes and IMDb are likely to use additional functions that render different lists of suggested movies.  For instance, IMDb seems to put more weight on the actors and movie titles, whereas Rotten Tomatoes seems to put more emphasis on the genres of the input movie “Mission: Impossible II (2000).”
 
 ### Recommending Movies based on the User’s Watch History
